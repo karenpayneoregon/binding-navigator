@@ -15,6 +15,7 @@ namespace NavigatorLibrary
 
             Items.Add(new ToolStripSeparator());
             Items.Add(new ToolStripButton() { Name = "bindingNavigatorAboutItem", Text = "About"});
+            Items.Add(new ToolStripButton() { Name = "bindingNavigatorCurrentItem", Text = "Current"});
         }
 
         /// <summary>
@@ -67,5 +68,6 @@ namespace NavigatorLibrary
         /// </summary>
         public ToolStripItem DeleteItemButton => Items["bindingNavigatorDeleteItem"]!;
         public ToolStripItem AboutItemButton => Items["bindingNavigatorAboutItem"]!;
+        public ToolStripItem CurrentItemButton => Items["bindingNavigatorCurrentItem"]!;
     }
 }

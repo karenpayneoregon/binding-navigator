@@ -1,0 +1,3 @@
+- Simple example for a BindingNavigator.
+- Gender for a real app should be a combobox.
+- Bogus NuGet package is used to generate data.

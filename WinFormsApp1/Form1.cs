@@ -1,7 +1,9 @@
+using System.ComponentModel;
 using BindingListLibrary;
 using WinFormsApp1.Classes;
 using WinFormsApp1.Models;
 using static WinFormsApp1.Classes.Dialogs;
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 namespace WinFormsApp1;
 
@@ -12,7 +14,7 @@ public partial class Form1 : Form
     public Form1()
     {
         InitializeComponent();
-
+        CustomersDataGridView.AutoGenerateColumns = false;
         Shown += Form_Shown;
 
     }
@@ -25,7 +27,7 @@ public partial class Form1 : Form
     private void Setup()
     {
         _customersSortableBindingList = new SortableBindingList<Customer>(
-            BogusOperations.CustomersList(3));
+            BogusOperations.CustomersList(10));
 
         _customerBindingSource.DataSource = _customersSortableBindingList;
         CustomersBindingNavigator.BindingSource = _customerBindingSource;
@@ -38,10 +40,40 @@ public partial class Form1 : Form
         CustomersBindingNavigator.AboutItemButton.Click += AboutItemButton_Click;
         CustomersBindingNavigator.DeleteItemButton.Click += CustomersDelete_Click;
         CustomersBindingNavigator.AddItemButton.Click += CustomersAdd_Click;
+        CustomersBindingNavigator.CurrentItemButton.Click += CurrentItemButton_Click;
         CustomersBindingNavigator.RemoveDefaultHandlers();
 
         CustomersDataGridView.UserDeletingRow += CustomersDataGridView_UserDeletingRow;
 
+        _customerBindingSource.ListChanged += _customerBindingSource_ListChanged;
+
+    }
+
+    /*
+     * In combination with INotifyPropertyChanged in the Customer model, handle changes
+     * that for a real application would be saved to a database or rejected.
+     */
+    private void _customerBindingSource_ListChanged(object? sender, ListChangedEventArgs e)
+    {
+        if (e.ListChangedType == ListChangedType.ItemChanged)
+        {
+            var x = _customersSortableBindingList[e.OldIndex];
+            MessageBox.Show($"Property {e.PropertyDescriptor!.DisplayName} has changed");
+        }else if (e.ListChangedType == ListChangedType.ItemAdded)
+        {
+            // do something
+        }
+        else if (e.ListChangedType == ListChangedType.ItemDeleted)
+        {
+            // do something
+        }
+    }
+
+    private void CurrentItemButton_Click(object? sender, EventArgs e)
+    {
+        if (_customerBindingSource.Current is null) return;
+        Customer current = _customersSortableBindingList[_customerBindingSource.Position];
+        MessageBox.Show($"First: {current.FirstName} Last: {current.LastName} Id: {current.Id} ");
     }
 
     private void AboutItemButton_Click(object? sender, EventArgs e)
